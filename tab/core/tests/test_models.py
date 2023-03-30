@@ -21,7 +21,8 @@ class AccountTests(TestCase):
     def test_create_account_failed(self):
         """Test account creation fails due to incorrect input"""
         with self.assertRaises(exceptions.ValidationError):
-            models.Account.objects.create(id="7299be1b-8506", name="TEST ACCOUNT 1")
+            models.Account.objects.create(id="7299be1b-8506",
+                                          name="TEST ACCOUNT 1")
 
 
 class TransactionTests(TestCase):

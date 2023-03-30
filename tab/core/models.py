@@ -23,7 +23,8 @@ class Transaction(models.Model):
     id = models.CharField(primary_key=True, max_length=10)
     accountId = models.ForeignKey(Account, on_delete=models.DO_NOTHING)
     amount = models.IntegerField(default=0)
-    currency = models.CharField(max_length=3, validators=[MinLengthValidator(3)])
+    currency = models.CharField(max_length=3,
+                                validators=[MinLengthValidator(3)])
     type = models.CharField(null=False, max_length=20)
     dateTime = models.DateTimeField()
 

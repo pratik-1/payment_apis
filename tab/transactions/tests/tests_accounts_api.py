@@ -24,7 +24,7 @@ class AccountApiTests(TestSetUp):
 
     def test_retrieve_accounts(self):
         """Test retrieving a list of accounts."""
-        accounts = Account.objects.all().order_by("id")
+        accounts = Account.objects.all().order_by("name")
         # get response for list of accounts
         res = self.client.get(ACCOUNT_URL)
         serializer = tserializers.AccountSerializer(accounts, many=True)
@@ -44,10 +44,10 @@ class TransactionApiTests(TestTransactionSetUp):
         # get response for list of transactions
         res = self.client.get(TRANSACTION_URL)
 
-        serializer = tserializers.TransactionSerializer(transactions, many=True)
+        ser = tserializers.TransactionSerializer(transactions, many=True)
         # assert
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(res.data, serializer.data)
+        self.assertEqual(res.data, ser.data)
 
     def test_update_transactions(self):
         """Test to update existing transaction."""
@@ -63,7 +63,7 @@ class TransactionSummayView(TestTransactionSetUp):
     def test_get_account_object_error(self):
         """Test when incorrect id is passed"""
         with self.assertRaises(exceptions.ValidationError):
-            account = self.tsv.get_account_object("TEST")
+            _ = self.tsv.get_account_object("TEST")
 
     def test_get_transactions_list(self):
         """Test if transaction list is returned"""
@@ -82,7 +82,7 @@ class TransactionSummayView(TestTransactionSetUp):
         self.assertEqual(balance, {"EUR": 139970, "GBP": 798700})
 
     def test_get_transaction_summary(self):
-        """Test get request api for transaction summary with valid api format"""
+        """Test get request api for transaction summary with valid format"""
         # check if request for test account is successful
         url = detail_url(self.account[0].id)
         res = self.client.get(url)

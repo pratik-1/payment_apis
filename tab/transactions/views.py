@@ -18,7 +18,7 @@ class AccountsView(viewsets.ModelViewSet):
     serializer_class = serializer.AccountSerializer
 
     def get_queryset(self):
-        return self.queryset.order_by("id")
+        return self.queryset.order_by("name")
 
 
 class TransactionView(viewsets.ModelViewSet):
@@ -114,11 +114,13 @@ class TransactionSummayView(APIView):
         account = self.get_account_object(account_id)
         if not account:
             return Response(
-                {"res": f"Account with account id {account_id} does not exists"},
+                {"res":
+                 f"Account with account id {account_id} does not exists"},
                 status=status.HTTP_404_NOT_FOUND,
             )
         transactions, balance = self.get_transaction_balance(account_id)
 
-        d = {"account": account, "transactions": transactions, "balance": balance}
+        d = {"account": account, "transactions": transactions,
+             "balance": balance}
         ser = serializer.TransactionBalanceSerializer(d)
         return Response(ser.data, status=status.HTTP_200_OK)

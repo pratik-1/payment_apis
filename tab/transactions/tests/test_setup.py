@@ -47,8 +47,8 @@ def get_data_from_file(filename, field, value):
             json_data = json.load(data_file)
         data = [d for d in json_data if d[field] == value]
         return data
-    except:
-        return
+    except FileNotFoundError as e:
+        raise (e)
 
 
 def get_data(filename):
