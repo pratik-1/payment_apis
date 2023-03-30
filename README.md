@@ -76,6 +76,8 @@ python manage.py runserver
 http://127.0.0.1:8000/api/docs/
 ```
 
+![Payments APIs](https://user-images.githubusercontent.com/37976329/228940448-84108d3e-00dd-44b5-8960-615cf6db91d6.jpg)
+
 **If you reach here and able to see all the endpoints this ensures project is setup with database intialized.**
 
 ## Explore APIs
@@ -127,4 +129,4 @@ To find the transaction summary of an account.
 
 5. If the account id format is not valid. You will get validation error and need to provide correct format of account id.
 
-Feel free to create new account, add transactions for the account. Update and delete the accounts, transactions data.
+**Feel free to create new account, add transactions for the account. Update and delete the accounts, transactions data.**
