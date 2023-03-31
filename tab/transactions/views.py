@@ -42,26 +42,31 @@ def createDictFromPandas(df):
 
 
 class TransactionSummayView(APIView):
-    def get_account_object(self, account_id):
+    def get_object(self, *args, **kwargs):
         """
-        Helper method to get account for a given account_id
+        Helper method to get object for a given id
         """
         try:
-            account = Account.objects.get(id=account_id)
-        except Account.DoesNotExist:
-            return None
-        return account
+            obj = kwargs['model'].objects.get(id=kwargs['id'])
+        except kwargs['model'].DoesNotExist:
+            return Response(
+                    {"res":
+                    f"{kwargs['model']} id {kwargs['id']} does not exists"},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+        return obj
 
-    def get_transactions_list(self, account_id):
+    def get_transactions_list(self, *args, **kwargs):
         """Helper method to get transactions for a given account id
 
         Returns:
             Transactions queryset from database or
         """
-        transactions = Transaction.objects.filter(accountId=account_id)
-        if not transactions:
+        filtered_obj = kwargs['model'].objects.filter(
+            accountId=kwargs['accountId'])
+        if not filtered_obj:
             return {}
-        return transactions
+        return filtered_obj
 
     def get_transaction_balance(self, account_id):
         """Calculates and return the transaction aggregation for a
@@ -90,9 +95,12 @@ class TransactionSummayView(APIView):
         Returns:
             tuple: transactions, balance
         """
-        transactions = self.get_transactions_list(account_id).values()
+        transactions = self.get_transactions_list(model=Transaction,
+                                                accountId=account_id).values()
         balance = {}
         # calculate transactions balance
+        # NOTE: There could be another way to filter and perform operations
+        # in django query itself. Need to review performance.
         if transactions:
             df = pd.DataFrame(list(transactions))
             df["type"] = df["type"].str.lower()
@@ -107,17 +115,11 @@ class TransactionSummayView(APIView):
             balance = createDictFromPandas(balance)
         return transactions, balance
 
-    def get(self, request, account_id, *args, **kwargs):
+    def get(self, request, account_id):
         """
         Get View for transaction and balance for the given account id.
         """
-        account = self.get_account_object(account_id)
-        if not account:
-            return Response(
-                {"res":
-                 f"Account with account id {account_id} does not exists"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
+        account = self.get_object(model=Account, id=account_id)
         transactions, balance = self.get_transaction_balance(account_id)
 
         d = {"account": account, "transactions": transactions,

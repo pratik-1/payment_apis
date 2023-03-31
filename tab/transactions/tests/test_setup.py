@@ -16,12 +16,12 @@ def create_account(**params):
     return Account.objects.create(**defaults)
 
 
-def get_account(id, name=None):
+def get_account(id):
     account = None
     try:
         account = Account.objects.get(id=id)
-    except Account.DoesNotExist:
-        account = create_account(id=id, name=name)
+    except Account.DoesNotExist as e:
+        raise (e)
     return account
 
 
