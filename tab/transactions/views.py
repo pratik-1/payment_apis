@@ -48,12 +48,13 @@ class TransactionSummayView(APIView):
         """
         try:
             obj = kwargs['model'].objects.get(id=kwargs['id'])
-        except kwargs['model'].DoesNotExist:
-            return Response(
-                    {"res":
-                    f"{kwargs['model']} id {kwargs['id']} does not exists"},
-                    status=status.HTTP_404_NOT_FOUND,
-                )
+        except kwargs['model'].DoesNotExist as e:
+            # return Response(
+            #         {"res":
+            #         f"{kwargs['model']} id {kwargs['id']} does not exists"},
+            #         status=status.HTTP_404_NOT_FOUND,
+            #     )
+            raise (e)
         return obj
 
     def get_transactions_list(self, *args, **kwargs):
@@ -62,6 +63,7 @@ class TransactionSummayView(APIView):
         Returns:
             Transactions queryset from database or
         """
+        _ = self.get_object(model=Account, id=kwargs['accountId'])
         filtered_obj = kwargs['model'].objects.filter(
             accountId=kwargs['accountId'])
         if not filtered_obj:
@@ -119,7 +121,14 @@ class TransactionSummayView(APIView):
         """
         Get View for transaction and balance for the given account id.
         """
-        account = self.get_object(model=Account, id=account_id)
+        try:
+            account = self.get_object(model=Account, id=account_id)
+        except Account.DoesNotExist:
+            return Response(
+                    {"res":
+                    f"Account id {account_id} does not exists"},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
         transactions, balance = self.get_transaction_balance(account_id)
 
         d = {"account": account, "transactions": transactions,
