@@ -119,7 +119,7 @@ To find the transaction summary of an account.
 
 ![Screenshot 2023-03-30 193917](https://user-images.githubusercontent.com/37976329/228937520-1590a8d8-f059-413e-b281-2ff9db457fff.jpg)
 
-4. If you provide valid account id format but account is present in database. You will see an error.
+4. If you provide valid account id format but account is not present in database. You will see an error.
 
 ```
 {
