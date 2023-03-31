@@ -123,7 +123,7 @@ To find the transaction summary of an account.
 
 ```
 {
- "res": "Account with account id 8299be1b-8506-4702-8eb9-c418761f2dcf does not exists"
+ "res": "Account id 8299be1b-8506-4702-8eb9-c418761f2dcf does not exists"
 }
 ```
 
